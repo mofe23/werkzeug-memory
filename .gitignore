@@ -1,0 +1,13 @@
+# generated output
+*.pdf
+
+# user's own photos (personal, not tracked)
+my_images/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
