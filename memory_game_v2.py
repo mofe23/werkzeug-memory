@@ -37,32 +37,33 @@ from reportlab.lib.utils import ImageReader
 # ─── Tool catalogue  (key, German name, English DDG search fallback) ──────────
 
 TOOLS = [
-    ("bohrmaschine",        "Bohrmaschine",          "cordless power drill tool"),
-    ("bohrer",              "Bohrer",                "spiral drill bit HSS metal"),
-    ("hammer",              "Hammer",                "claw hammer tool"),
-    ("meissel",             "Meißel",                "cold chisel steel tool"),
-    ("kreuzschrauber",      "Kreuzschraubenzieher",  "phillips screwdriver tool"),
-    ("schlitzschrauber",    "Schlitzschraubenzieher","flathead screwdriver tool"),
-    ("nuss",                "Nuss",                  "socket set wrench tool"),
-    ("ratsche",             "Ratsche",               "ratchet wrench socket tool"),
-    ("inbusschluessel",     "Inbusschlüssel",        "hex allen key set"),
-    ("handsaege",           "Handsäge",              "hand saw carpentry tool"),
-    ("wasserwaage",         "Wasserwaage",           "spirit level tool"),
-    ("massband",            "Maßband",               "tape measure retractable"),
-    ("kombizange",          "Kombizange",            "combination lineman pliers"),
-    ("seitenschneider",     "Seitenschneider",       "diagonal cutting pliers"),
-    ("gabelschluessel",     "Gabelschlüssel",        "open end wrench spanner"),
-    ("rollgabelschluessel", "Rollgabelschlüssel",    "adjustable wrench spanner"),
-    ("winkelschleifer",     "Winkelschleifer",       "angle grinder power tool"),
-    ("stichsaege",          "Stichsäge",             "jigsaw power tool"),
-    ("schraubklemme",       "Schraubklemme",         "C clamp G clamp workshop"),
-    ("malerrolle",          "Malerrolle",            "paint roller brush"),
-    ("pinsel",              "Pinsel",                "paintbrush artist brush"),
-    ("kelle",               "Kelle",                 "masonry brick trowel"),
-    ("spachtel",            "Spachtel",              "putty knife spatula"),
-    ("feile",               "Feile",                 "metal hand file tool"),
-    ("zollstock",           "Zollstock",             "folding zigzag ruler carpenter"),
-    ("kreissaege",          "Kreissäge",             "circular saw power tool"),
+    # (key, Deutsch, DDG search query, Русский)
+    ("bohrmaschine",        "Bohrmaschine",          "cordless power drill tool",      "Дрель"),
+    ("bohrer",              "Bohrer",                "spiral drill bit HSS metal",     "Сверло"),
+    ("hammer",              "Hammer",                "claw hammer tool",               "Молоток"),
+    ("meissel",             "Meißel",                "cold chisel steel tool",         "Зубило"),
+    ("kreuzschrauber",      "Kreuzschraubenzieher",  "phillips screwdriver tool",      "Крестовая отвёртка"),
+    ("schlitzschrauber",    "Schlitzschraubenzieher","flathead screwdriver tool",      "Плоская отвёртка"),
+    ("nuss",                "Nuss",                  "socket set wrench tool",         "Торцевая головка"),
+    ("ratsche",             "Ratsche",               "ratchet wrench socket tool",     "Трещотка"),
+    ("inbusschluessel",     "Inbusschlüssel",        "hex allen key set",              "Шестигранный ключ"),
+    ("handsaege",           "Handsäge",              "hand saw carpentry tool",        "Ручная пила"),
+    ("wasserwaage",         "Wasserwaage",           "spirit level tool",              "Уровень"),
+    ("massband",            "Maßband",               "tape measure retractable",       "Рулетка"),
+    ("kombizange",          "Kombizange",            "combination lineman pliers",     "Плоскогубцы"),
+    ("seitenschneider",     "Seitenschneider",       "diagonal cutting pliers",        "Бокорезы"),
+    ("gabelschluessel",     "Gabelschlüssel",        "open end wrench spanner",        "Рожковый ключ"),
+    ("rollgabelschluessel", "Rollgabelschlüssel",    "adjustable wrench spanner",      "Разводной ключ"),
+    ("winkelschleifer",     "Winkelschleifer",       "angle grinder power tool",       "Болгарка"),
+    ("stichsaege",          "Stichsäge",             "jigsaw power tool",              "Лобзик"),
+    ("schraubklemme",       "Schraubklemme",         "C clamp G clamp workshop",       "Струбцина"),
+    ("malerrolle",          "Malerrolle",            "paint roller brush",             "Малярный валик"),
+    ("pinsel",              "Pinsel",                "paintbrush artist brush",        "Кисть"),
+    ("kelle",               "Kelle",                 "masonry brick trowel",           "Мастерок"),
+    ("spachtel",            "Spachtel",              "putty knife spatula",            "Шпатель"),
+    ("feile",               "Feile",                 "metal hand file tool",           "Напильник"),
+    ("zollstock",           "Zollstock",             "folding zigzag ruler carpenter", "Складной метр"),
+    ("kreissaege",          "Kreissäge",             "circular saw power tool",        "Циркулярная пила"),
 ]
 
 
@@ -70,8 +71,8 @@ TOOLS = [
 
 CARD_W   = 744   # px
 CARD_H   = 1040  # px
-PHOTO_H  = 820   # px  (top 79 % for photo)
-BANNER_H = CARD_H - PHOTO_H   # 220 px
+PHOTO_H  = 780   # px  (top 75 % for photo)
+BANNER_H = CARD_H - PHOTO_H   # 260 px — room for DE + RU name
 RADIUS   = 24    # corner radius
 
 BANNER_BG    = (20, 45, 100)       # dark navy
@@ -335,10 +336,11 @@ def rounded_rectangle_mask(size, radius):
     return mask
 
 
-def build_card(photo, name):
+def build_card(photo, de_name, ru_name=None):
     """
     Compose one card: photo (top) + name banner (bottom) with rounded corners.
     `photo` is a PIL RGB image or None (draws a placeholder).
+    Banner shows German name (large, white) and optional Russian name (smaller, steel-blue).
     """
     card = Image.new("RGB", (CARD_W, CARD_H), "white")
 
@@ -357,45 +359,51 @@ def build_card(photo, name):
     banner = Image.new("RGB", (CARD_W, BANNER_H), BANNER_BG)
     bd = ImageDraw.Draw(banner)
 
-    # Choose font size based on name length
-    name_len = len(name)
-    if name_len <= 8:
-        fs = 84
-    elif name_len <= 12:
-        fs = 72
-    elif name_len <= 16:
-        fs = 58
-    elif name_len <= 20:
-        fs = 48
-    else:
-        fs = 40
-
-    f = fnt(fs)
-    # Word-wrap if needed
-    words = name.split()
-    lines, cur = [], ""
-    max_px = CARD_W - 40
-    for word in words:
-        test = (cur + " " + word).strip()
-        bb = bd.textbbox((0, 0), test, font=f)
-        if bb[2] - bb[0] <= max_px or not cur:
-            cur = test
-        else:
+    def wrap(text, f):
+        words = text.split()
+        lines, cur = [], ""
+        for word in words:
+            test = (cur + " " + word).strip()
+            bb = bd.textbbox((0, 0), test, font=f)
+            if bb[2] - bb[0] <= CARD_W - 40 or not cur:
+                cur = test
+            else:
+                lines.append(cur)
+                cur = word
+        if cur:
             lines.append(cur)
-            cur = word
-    if cur:
-        lines.append(cur)
+        return lines
 
-    line_h = fs + 8
-    total_h = len(lines) * line_h
+    # German name — primary, white
+    n = len(de_name)
+    de_fs = 76 if n <= 8 else 64 if n <= 12 else 52 if n <= 16 else 44 if n <= 20 else 36
+    de_f  = fnt(de_fs)
+    de_lines = wrap(de_name, de_f)
+    de_lh = de_fs + 6
+
+    # Russian name — secondary, steel-blue, ~65 % the size of German
+    ru_lines, ru_lh = [], 0
+    if ru_name:
+        ru_fs = max(32, int(de_fs * 0.65))
+        ru_f  = fnt(ru_fs)
+        ru_lines = wrap(ru_name, ru_f)
+        ru_lh = ru_fs + 4
+
+    gap = 14 if ru_lines else 0
+    total_h = len(de_lines) * de_lh + gap + len(ru_lines) * ru_lh
     y = (BANNER_H - total_h) // 2
 
-    for line in lines:
-        bb = bd.textbbox((0, 0), line, font=f)
-        tw = bb[2] - bb[0]
-        x = (CARD_W - tw) // 2
-        bd.text((x, y), line, fill=BANNER_TEXT, font=f)
-        y += line_h
+    for line in de_lines:
+        bb = bd.textbbox((0, 0), line, font=de_f)
+        bd.text(((CARD_W - bb[2] + bb[0]) // 2, y), line, fill=(255, 255, 255), font=de_f)
+        y += de_lh
+
+    if ru_lines:
+        y += gap
+        for line in ru_lines:
+            bb = bd.textbbox((0, 0), line, font=ru_f)
+            bd.text(((CARD_W - bb[2] + bb[0]) // 2, y), line, fill=(170, 200, 240), font=ru_f)
+            y += ru_lh
 
     card.paste(banner, (0, PHOTO_H))
 
@@ -502,7 +510,7 @@ def build_pdf(output, tools, force_download=False):
 
     print(f"Lade Bilder herunter (Cache: ./{IMG_DIR}/) …\n")
     photos = {}
-    for i, (key, name, ddg_query) in enumerate(tools, 1):
+    for i, (key, name, ddg_query, *_) in enumerate(tools, 1):
         print(f"  [{i:2d}/{len(tools)}] {name:<26}", end=" ", flush=True)
         img, src = get_photo(key, ddg_query, force_download)
         photos[key] = img
@@ -510,8 +518,8 @@ def build_pdf(output, tools, force_download=False):
 
     print(f"\nErstelle Karten …")
     card_images = []
-    for key, name, _ in tools:
-        card = build_card(photos[key], name)
+    for key, name, _, ru_name in tools:
+        card = build_card(photos[key], name, ru_name)
         card_images.append(card)
         card_images.append(card)   # identical pair
 
@@ -557,17 +565,17 @@ def main():
     args = ap.parse_args()
 
     if args.list_tools:
-        print(f"{'Schlüssel':<24}  {'Deutsch':<26}  Status")
-        print("-" * 72)
-        for k, name, _ in TOOLS:
+        print(f"{'Schlüssel':<24}  {'Deutsch':<26}  {'Русский':<22}  Status")
+        print("-" * 90)
+        for k, name, _, ru_name in TOOLS:
             custom_img, custom_path = load_custom(k)
             if custom_img:
                 status = f"custom  ({os.path.basename(custom_path)})"
             elif os.path.exists(cached_path(k)):
-                status = "cached  (tool_images/)"
+                status = "cached  (images/)"
             else:
                 status = "wird heruntergeladen"
-            print(f"  {k:<22}  {name:<26}  {status}")
+            print(f"  {k:<22}  {name:<26}  {ru_name:<22}  {status}")
         return
 
     build_pdf(args.output, TOOLS, args.force_download)

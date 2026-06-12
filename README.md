@@ -90,21 +90,34 @@ python3 memory_game_v2.py --force-download
 
 ## Tool keys
 
-| Key | Deutsch | Key | Deutsch |
-|-----|---------|-----|---------|
-| `bohrmaschine` | Bohrmaschine | `rollgabelschluessel` | Rollgabelschlüssel |
-| `bohrer` | Bohrer | `winkelschleifer` | Winkelschleifer |
-| `hammer` | Hammer | `stichsaege` | Stichsäge |
-| `meissel` | Meißel | `schraubklemme` | Schraubklemme |
-| `kreuzschrauber` | Kreuzschraubenzieher | `malerrolle` | Malerrolle |
-| `schlitzschrauber` | Schlitzschraubenzieher | `pinsel` | Pinsel |
-| `nuss` | Nuss | `kelle` | Kelle |
-| `ratsche` | Ratsche | `spachtel` | Spachtel |
-| `inbusschluessel` | Inbusschlüssel | `feile` | Feile |
-| `handsaege` | Handsäge | `zollstock` | Zollstock |
-| `wasserwaage` | Wasserwaage | `kreissaege` | Kreissäge |
-| `massband` | Maßband | `kombizange` | Kombizange |
-| `gabelschluessel` | Gabelschlüssel | `seitenschneider` | Seitenschneider |
+| Key | Deutsch | Русский |
+|-----|---------|---------|
+| `bohrmaschine` | Bohrmaschine | Дрель |
+| `bohrer` | Bohrer | Сверло |
+| `hammer` | Hammer | Молоток |
+| `meissel` | Meißel | Зубило |
+| `kreuzschrauber` | Kreuzschraubenzieher | Крестовая отвёртка |
+| `schlitzschrauber` | Schlitzschraubenzieher | Плоская отвёртка |
+| `nuss` | Nuss | Торцевая головка |
+| `ratsche` | Ratsche | Трещотка |
+| `inbusschluessel` | Inbusschlüssel | Шестигранный ключ |
+| `handsaege` | Handsäge | Ручная пила |
+| `wasserwaage` | Wasserwaage | Уровень |
+| `massband` | Maßband | Рулетка |
+| `kombizange` | Kombizange | Плоскогубцы |
+| `seitenschneider` | Seitenschneider | Бокорезы |
+| `gabelschluessel` | Gabelschlüssel | Рожковый ключ |
+| `rollgabelschluessel` | Rollgabelschlüssel | Разводной ключ |
+| `winkelschleifer` | Winkelschleifer | Болгарка |
+| `stichsaege` | Stichsäge | Лобзик |
+| `schraubklemme` | Schraubklemme | Струбцина |
+| `malerrolle` | Malerrolle | Малярный валик |
+| `pinsel` | Pinsel | Кисть |
+| `kelle` | Kelle | Мастерок |
+| `spachtel` | Spachtel | Шпатель |
+| `feile` | Feile | Напильник |
+| `zollstock` | Zollstock | Складной метр |
+| `kreissaege` | Kreissäge | Циркулярная пила |
 
 ---
 
