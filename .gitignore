@@ -1,5 +1,6 @@
-# generated output
+# generated output (keep the sample, ignore personal builds)
 *.pdf
+!memory_game_v2.pdf
 
 # user's own photos (personal, not tracked)
 my_images/
